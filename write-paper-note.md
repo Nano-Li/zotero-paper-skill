@@ -1,7 +1,7 @@
 ---
 id: write-paper-note
 description: Generate a note for a single paper, or for a specific detailed question about a single paper. Use ONLY when the user explicitly asks to write, draft, or edit a paper note.
-version: 2
+version: 2.1
 match: /\b(create|make|write|draft|generate)\b.*\b(note|paper note|reading note|notes?)\b.*\b(for|from|about|on)\b.*\b(paper|article|this)\b/i
 match: /\b(note|notes?)\b.*\b(for|from|about|on)\b.*\b(paper|article|this|these)\b/i
 match: /\b(save|write|append|add|put)\b.*\b(to\s+)?(note|notes?)\b/i
@@ -32,7 +32,6 @@ If unclear, default to Zotero note.
 
 ### Step 1 — Read content
 
-- First, check whether the current item already has other notes. If so, read their content.
 - If `mineruCacheDir` is available: use `file_io(read, '{mineruCacheDir}/full.md')`.
 - Otherwise: use `read_paper` for the overview, then optionally one `search_paper` call for key results/methods if the user wants detail beyond the abstract.
 - Keep the read phase minimal: 1 call (MinerU) or 1–2 calls (read_paper/search_paper). Do not read the entire paper section by section.
@@ -66,16 +65,25 @@ tags: [zotero, paper-note]
 # {{paperTitle}}
 
 ## Summary
-The paper's main contributions and core innovations.
+Summarize the paper's main content in 1-2 sentences.
 
-## Key Findings
-- The most important results, conclusions, or contributions of the paper.
+## Notes
+### 逻辑链
+Explain the logical support that leads to the paper's conclusions.
 
-## Methodology
-Summary of the research methodology, experimental setup, or analytical approach.
+### 理论
+Explain the theoretical framework or assumptions used by the paper.
 
-## My Notes
-Personal thoughts, critiques, open questions, and connections to other work. If the current item already has other notes, summarize the relevant points from those notes here.
+### 数值计算方法
+Describe the numerical or computational methods used by the paper, if any.
+
+### 实验方法
+Describe the experimental design, protocol, data, or empirical setup, if any.
+
+## 创新点
+Explain the core innovations that distinguish this paper from related work.
+
+## 图解
 
 ```
 
@@ -86,7 +94,8 @@ Personal thoughts, critiques, open questions, and connections to other work. If 
 - Fill in `{{created}}` with today's date in YYYY-MM-DD format. This is when the note was created, not when the paper was published (that's the `year` field), and not when the Zotero item was created.
 - **Required fields that must always be present**: `title`, `created`, `tags`. Never omit these.
 - **Look-up fields**: `citekey`, `doi`, `journal`, `year`. If a value is genuinely missing in Zotero metadata, use an empty string (e.g., `doi: ""`) rather than omitting the key — keep the frontmatter shape consistent.
-- **`My Notes`** must only contain content from user-created notes already attached to the same item. If there are no user-created notes under the item, `My Notes` MUST remain empty: keep the `## My Notes` heading, but write nothing under it. Do not invent, infer, or add personal thoughts, critiques, open questions, or connections.
+- Keep the template section headings exactly as shown. The headings are intentionally user-facing Chinese labels, while the explanatory text in this skill is written in English for instruction clarity.
+- **`图解`** must only contain figure embeds and figure explanations when the user explicitly asks about one or more specific figures. If the user did not ask about any figure, `图解` MUST remain empty: keep the `## 图解` heading, but write nothing under it.
 
 **Checklist before writing the note — verify each item:**
 1. `title:` value is the paper's full title from Zotero - NOT the filename, NOT the figure/subtopic label, NOT the date.
@@ -94,7 +103,7 @@ Personal thoughts, critiques, open questions, and connections to other work. If 
 3. You did not add `authors`, `note_type`, `figure`, `abstract`, or any other field.
 4. `created:` is today's date in YYYY-MM-DD.
 5. `tags:` is present.
-6. If the current item has no user-created notes, leave `## My Notes` empty; keep only the `## My Notes` heading and do not invent personal thoughts, critiques, questions, or connections.
+6. If the user did not ask about a specific figure, leave `## 图解` empty; keep only the `## 图解` heading and do not invent figure explanations.
 7. You identified the `{notetitle}` subtopic (figure label, section name, topic) separately — it goes into the filename in Step 4b, never into `title:`.
 
 ### Step 3 — Include figures
@@ -104,7 +113,7 @@ Personal thoughts, critiques, open questions, and connections to other work. If 
 #### For Zotero notes (`edit_current_note`)
 
 - Use `![Caption](file:///{mineruCacheDir}/images/filename.png)`. The `edit_current_note` tool auto-imports `file://` images as Zotero embedded attachments.
-- Place figures inline near the relevant discussion.
+- Place figure embeds and their explanations under the `## 图解` section.
 
 #### For file-based notes (`file_io`)
 
@@ -205,6 +214,6 @@ Three components, joined by single hyphens:
 - Use the native path separator provided in the runtime platform section. Never mix separators.
 
 ### Budget
-Total tool calls: 2–5 (read content, optionally look up citekeys, optionally copy images, write note).
+Total tool calls: 2–5 (read content, read metadata, optionally copy figures, write note).
 
 <!-- LLM-FOR-ZOTERO:MANAGED-END -->
