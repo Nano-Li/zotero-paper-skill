@@ -98,6 +98,8 @@ tags: [zotero, paper-note]
 | 参数 | 数值 | 备注 |
 |---|---|---|
 
+### 对我有用的参数
+
 ### 实验流程
 
 ## 5. 理论与模拟方法
@@ -109,6 +111,8 @@ tags: [zotero, paper-note]
 ## 6. 机制与结果
 
 ### 作者提到的机制
+
+### 我的思考
 
 ### 关键结果
 
@@ -127,16 +131,16 @@ tags: [zotero, paper-note]
 - Fill in `{{created}}` with today's date in YYYY-MM-DD format. This is when the note was created, not when the paper was published (that's the `year` field), and not when the Zotero item was created.
 - For **file-based notes**, required frontmatter fields that must always be present are `title`, `created`, and `tags`. Never omit these.
 - For **file-based notes**, look-up frontmatter fields are `citekey`, `doi`, `journal`, and `year`. If a value is genuinely missing in Zotero metadata, use an empty string (e.g., `doi: ""`) rather than omitting the key — keep the frontmatter shape consistent.
-- Keep the template section headings exactly as shown. The content filled into the note MUST be Chinese. Use English only when necessary for proper nouns, abbreviations, units, equations, and variables.
+- Keep the template section headings exactly as shown. Except for necessary proper nouns, abbreviations, units, equations, variables, and the required original-English excerpt paragraphs in `### 摘要` and `### 结论概括` (see the rule for `## 2. 摘要与结论` below), all filled note content MUST be Chinese.
 - Use valid LaTeX for important physical parameters, equations, and symbolic variables. If `full.md` contains a correct LaTeX formula, preserve that LaTeX formula rather than rewriting it as plain text. Every LaTeX command inside `$...$` or `$$...$$` MUST include its leading backslash, e.g., `\times`, `\mathrm{}`, `\mu`, `\circ`, `\sim`, `\pm`, `\lambda`, `\theta`, `\sqrt{}`, and `\frac{}{}`. In Markdown pipe tables, check table-cell formulas especially carefully because the same backslash syntax is still required inside table cells.
 - **`## 1. 一句话总结`**: write about one concise Chinese sentence summarizing the paper's main content.
-- **`## 2. 摘要与结论`**: under `### 摘要`, briefly reproduce or condense the paper abstract in Chinese. For this abstract section only, important original English terms may be added in parentheses after their Chinese translation, e.g., `电子相干（electronic coherence）`. Under `### 结论概括`, briefly summarize the paper's conclusions in Chinese.
+- **`## 2. 摘要与结论`**: under `### 摘要`, write two paragraphs: first reproduce the original English abstract from the paper, then provide a concise Chinese translation or summary. Under `### 结论概括`, write two paragraphs: first excerpt the key original English conclusion sentences from the paper, then provide a concise Chinese summary. Only these first paragraphs may be English excerpts.
 - **`## 3. 引言解读`**: under `### 逻辑链`, use bullet points, one concise Chinese sentence per bullet. Follow this bullet-list pattern: one bullet for the existing problem, one bullet for the proposed method, and one bullet for the obtained conclusion or result. Under `### 与前人工作的比较`, fill exactly two bullets: first the previous limitation, then this work's improvement. Each bullet should be one concise Chinese sentence and include key parameters when available.
-- **`## 4. 实验细节`**: fill the three parameter tables strictly in the shown table format. Only write parameters explicitly reported by the paper. If a table has no relevant parameters, leave the table empty; do not write `N/A`, `None`, or inferred values. Under `### 实验流程`, use short bullet points, one step per bullet. Example: `- 对准泵浦光和探测光，并校准延迟线。`
+- **`## 4. 实验细节`**: fill the three parameter tables strictly in the shown table format. Only write parameters explicitly reported by the paper. If a table has no relevant parameters, leave the table empty; do not write `N/A`, `None`, or inferred values. `### 对我有用的参数` must remain completely empty. Under `### 实验流程`, use short bullet points, one step per bullet. Example: `- 对准泵浦光和探测光，并校准延迟线。`
 - **`## 5. 理论与模拟方法`**: focus on key model names, theory terms, simulation methods, boundary conditions, assumptions, and important model parameters. Do not write generic descriptions.
-- **`## 6. 机制与结果`**: under `### 作者提到的机制`, state the physical mechanisms explicitly discussed by the authors. Under `### 关键结果`, summarize the experimental or computational results in one to two concise Chinese sentences.
+- **`## 6. 机制与结果`**: under `### 作者提到的机制`, state the physical mechanisms explicitly discussed by the authors. `### 我的思考` must remain completely empty. Under `### 关键结果`, summarize the experimental or computational results in one to two concise Chinese sentences.
 - **`## 7. 局限性`**: use bullet points, one concise Chinese sentence per limitation. Avoid long generic paragraphs and do not invent limitations not supported by the paper.
-- **`## 8. 我的笔记`**: always leave this section completely empty. It is reserved for the human researcher. Do not write prompts, placeholders, inferred ideas, suggestions, or comments.
+- **`### 对我有用的参数`**, **`### 我的思考`**, and **`## 8. 我的笔记`**: always leave these three sections completely empty. They are reserved for the human researcher. Do not write prompts, placeholders, inferred ideas, suggestions, or comments.
 - **`## 9. 重要图表`** must only contain figure embeds and figure explanations when the user explicitly asks about one or more specific figures. If the user did not ask about any figure, `## 9. 重要图表` MUST remain empty: keep the heading, but write nothing under it.
 
 **Checklist before writing the note — verify each item:**
@@ -147,7 +151,7 @@ tags: [zotero, paper-note]
 5. For file-based notes, `created:` is today's date in YYYY-MM-DD.
 6. For file-based notes, `tags:` is present.
 7. `### 逻辑链`, `### 实验流程`, and `## 7. 局限性` must all use bullet lists, with one concise Chinese sentence per bullet. Logic Chain example: `- 现有方法存在xxx问题。` `- 本文提出xxx方法。` `- 最终得到xxx结论。`
-8. `## 8. 我的笔记` is completely empty.
+8. `### 对我有用的参数`, `### 我的思考`, and `## 8. 我的笔记` are completely empty.
 9. All math expressions use valid LaTeX syntax. Check table cells especially carefully: every physical parameter written in LaTeX inside a Markdown pipe table MUST use correct backslash commands. Every LaTeX command has its leading backslash. Correct table-cell example:
 
    ```markdown
