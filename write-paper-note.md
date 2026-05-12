@@ -1,7 +1,7 @@
 ---
 id: write-paper-note
 description: Generate a note for a single paper, or for a specific detailed question about a single paper. Use ONLY when the user explicitly asks to write, draft, or edit a paper note.
-version: 2.1
+version: 2.2
 match: /\b(create|make|write|draft|generate)\b.*\b(note|paper note|reading note|notes?)\b.*\b(for|from|about|on)\b.*\b(paper|article|this)\b/i
 match: /\b(note|notes?)\b.*\b(for|from|about|on)\b.*\b(paper|article|this|these)\b/i
 match: /\b(save|write|append|add|put)\b.*\b(to\s+)?(note|notes?)\b/i
@@ -49,7 +49,7 @@ For **file-based notes** (`file_io`): include the full template with YAML frontm
 
 Use this template **exactly**.
 
-**FRONTMATTER LOCK**: the 7 fields listed below (`title`, `citekey`, `doi`, `year`, `journal`, `created`, `tags`) are the COMPLETE AND EXCLUSIVE list. You are FORBIDDEN from adding any other field. Explicitly forbidden (non-exhaustive): `authors`, `note_type`, `figure`, `abstract`, `source`, `url`, `keywords`, `added`, `updated`, `status`, `rating`. If you want to record author names, figure labels, abstracts, or any other metadata, put them in the **body text** of the note, not in frontmatter. Do not invent new fields under any circumstance.
+**FRONTMATTER LOCK**: when YAML frontmatter is used for file-based notes, the 7 fields listed below (`title`, `citekey`, `doi`, `year`, `journal`, `created`, `tags`) are the COMPLETE AND EXCLUSIVE list. You are FORBIDDEN from adding any other frontmatter field. Explicitly forbidden frontmatter fields (non-exhaustive): `authors`, `note_type`, `figure`, `abstract`, `source`, `url`, `keywords`, `added`, `updated`, `status`, `rating`. If you want to record author names, figure labels, abstracts, or any other metadata, put them in the **body text** of the note, not in frontmatter. Do not invent new frontmatter fields under any circumstance.
 
 ```
 ---
@@ -64,47 +64,100 @@ tags: [zotero, paper-note]
 
 # {{paperTitle}}
 
-## Summary
-Summarize the paper's main content in 1-2 sentences.
+## 1. 一句话总结
 
-## Notes
+## 2. 摘要与结论
+
+### 摘要
+
+### 结论概括
+
+## 3. 引言解读
+
 ### 逻辑链
-Explain the logical support that leads to the paper's conclusions.
 
-### 理论
-Explain the theoretical framework or assumptions used by the paper.
+### 与前人工作的比较
 
-### 数值计算方法
-Describe the numerical or computational methods used by the paper, if any.
+- 前人局限：
+- 本文改进：
 
-### 实验方法
-Describe the experimental design, protocol, data, or empirical setup, if any.
+## 4. 实验细节
 
-## 创新点
-Explain the core innovations that distinguish this paper from related work.
+### 激光参数
 
-## 图解
+| 参数 | 数值 | 备注 |
+|---|---|---|
+
+### 材料参数
+
+| 参数 | 数值 | 备注 |
+|---|---|---|
+
+### 测量系统
+
+| 参数 | 数值 | 备注 |
+|---|---|---|
+
+### 实验流程
+
+## 5. 理论与模拟方法
+
+### 理论方法
+
+### 模拟方法
+
+## 6. 机制与结果
+
+### 作者提到的机制
+
+### 关键结果
+
+## 7. 局限性
+
+## 8. 我的笔记
+
+## 9. 重要图表
 
 ```
 
 ### How to apply the template
 
-- For **paper notes**, `{{paperTitle}}` is **the full title of the paper itself** (e.g., `"A toolbox for representational similarity analysis"`), looked up from Zotero metadata via `read_library(sections:['metadata'])`. Use the exact same value in both the `title:` frontmatter field and the `# heading`.
+- `{{paperTitle}}` is **the full title of the paper itself** (e.g., `"A toolbox for representational similarity analysis"`), looked up from Zotero metadata via `read_library(sections:['metadata'])`. Use the exact same value in both the `title:` frontmatter field and the `# heading`.
 - **Filename and `title:` are independent fields.** The filename uses its own three-part pattern (see Step 4b) that MAY include the note subtopic and date; frontmatter `title:` never does. Never copy any part of the filename into `title:`.
 - Fill in `{{created}}` with today's date in YYYY-MM-DD format. This is when the note was created, not when the paper was published (that's the `year` field), and not when the Zotero item was created.
-- **Required fields that must always be present**: `title`, `created`, `tags`. Never omit these.
-- **Look-up fields**: `citekey`, `doi`, `journal`, `year`. If a value is genuinely missing in Zotero metadata, use an empty string (e.g., `doi: ""`) rather than omitting the key — keep the frontmatter shape consistent.
-- Keep the template section headings exactly as shown. The headings are intentionally user-facing Chinese labels, while the explanatory text in this skill is written in English for instruction clarity.
-- **`图解`** must only contain figure embeds and figure explanations when the user explicitly asks about one or more specific figures. If the user did not ask about any figure, `图解` MUST remain empty: keep the `## 图解` heading, but write nothing under it.
+- For **file-based notes**, required frontmatter fields that must always be present are `title`, `created`, and `tags`. Never omit these.
+- For **file-based notes**, look-up frontmatter fields are `citekey`, `doi`, `journal`, and `year`. If a value is genuinely missing in Zotero metadata, use an empty string (e.g., `doi: ""`) rather than omitting the key — keep the frontmatter shape consistent.
+- Keep the template section headings exactly as shown. The content filled into the note MUST be Chinese. Use English only when necessary for proper nouns, abbreviations, units, equations, and variables.
+- Use valid LaTeX for important physical parameters, equations, and symbolic variables. If `full.md` contains a correct LaTeX formula, preserve that LaTeX formula rather than rewriting it as plain text. Every LaTeX command inside `$...$` or `$$...$$` MUST include its leading backslash, e.g., `\times`, `\mathrm{}`, `\mu`, `\circ`, `\sim`, `\pm`, `\lambda`, `\theta`, `\sqrt{}`, and `\frac{}{}`. In Markdown pipe tables, check table-cell formulas especially carefully because the same backslash syntax is still required inside table cells.
+- **`## 1. 一句话总结`**: write about one concise Chinese sentence summarizing the paper's main content.
+- **`## 2. 摘要与结论`**: under `### 摘要`, briefly reproduce or condense the paper abstract in Chinese. For this abstract section only, important original English terms may be added in parentheses after their Chinese translation, e.g., `电子相干（electronic coherence）`. Under `### 结论概括`, briefly summarize the paper's conclusions in Chinese.
+- **`## 3. 引言解读`**: under `### 逻辑链`, use bullet points, one concise Chinese sentence per bullet. Follow this bullet-list pattern: one bullet for the existing problem, one bullet for the proposed method, and one bullet for the obtained conclusion or result. Under `### 与前人工作的比较`, fill exactly two bullets: first the previous limitation, then this work's improvement. Each bullet should be one concise Chinese sentence and include key parameters when available.
+- **`## 4. 实验细节`**: fill the three parameter tables strictly in the shown table format. Only write parameters explicitly reported by the paper. If a table has no relevant parameters, leave the table empty; do not write `N/A`, `None`, or inferred values. Under `### 实验流程`, use short bullet points, one step per bullet. Example: `- 对准泵浦光和探测光，并校准延迟线。`
+- **`## 5. 理论与模拟方法`**: focus on key model names, theory terms, simulation methods, boundary conditions, assumptions, and important model parameters. Do not write generic descriptions.
+- **`## 6. 机制与结果`**: under `### 作者提到的机制`, state the physical mechanisms explicitly discussed by the authors. Under `### 关键结果`, summarize the experimental or computational results in one to two concise Chinese sentences.
+- **`## 7. 局限性`**: use bullet points, one concise Chinese sentence per limitation. Avoid long generic paragraphs and do not invent limitations not supported by the paper.
+- **`## 8. 我的笔记`**: always leave this section completely empty. It is reserved for the human researcher. Do not write prompts, placeholders, inferred ideas, suggestions, or comments.
+- **`## 9. 重要图表`** must only contain figure embeds and figure explanations when the user explicitly asks about one or more specific figures. If the user did not ask about any figure, `## 9. 重要图表` MUST remain empty: keep the heading, but write nothing under it.
 
 **Checklist before writing the note — verify each item:**
-1. `title:` value is the paper's full title from Zotero - NOT the filename, NOT the figure/subtopic label, NOT the date.
-2. Frontmatter contains exactly the 7 keys shown above, in that order, and NO others.
-3. You did not add `authors`, `note_type`, `figure`, `abstract`, or any other field.
-4. `created:` is today's date in YYYY-MM-DD.
-5. `tags:` is present.
-6. If the user did not ask about a specific figure, leave `## 图解` empty; keep only the `## 图解` heading and do not invent figure explanations.
-7. You identified the `{notetitle}` subtopic (figure label, section name, topic) separately — it goes into the filename in Step 4b, never into `title:`.
+1. For Zotero notes, omit the YAML frontmatter entirely and start from `# {{paperTitle}}`. For file-based notes, include the YAML frontmatter.
+2. For file-based notes, `title:` value is the paper's full title from Zotero - NOT the filename, NOT the figure/subtopic label, NOT the date.
+3. For file-based notes, frontmatter contains exactly the 7 keys shown above, in that order, and NO others.
+4. For file-based notes, you did not add `authors`, `note_type`, `figure`, `abstract`, or any other extra frontmatter field.
+5. For file-based notes, `created:` is today's date in YYYY-MM-DD.
+6. For file-based notes, `tags:` is present.
+7. `### 逻辑链`, `### 实验流程`, and `## 7. 局限性` must all use bullet lists, with one concise Chinese sentence per bullet. Logic Chain example: `- 现有方法存在xxx问题。` `- 本文提出xxx方法。` `- 最终得到xxx结论。`
+8. `## 8. 我的笔记` is completely empty.
+9. All math expressions use valid LaTeX syntax. Check table cells especially carefully: every physical parameter written in LaTeX inside a Markdown pipe table MUST use correct backslash commands. Every LaTeX command has its leading backslash. Correct table-cell example:
+
+   ```markdown
+   | 参数 | 数值 | 备注 |
+   |---|---|---|
+   | NIR 强度 | $4\times10^{16}\ \mathrm{W/cm^2}$ | 泵浦光强 |
+   | 焦斑尺寸 | $40\times40\ \mu\mathrm{m}^2$ | 反应区处 |
+   ```
+10. You identified the `{notetitle}` subtopic (figure label, section name, topic) separately — it goes into the filename in Step 4b, never into `title:`.
+11. If the user did not ask about a specific figure, leave `## 9. 重要图表` empty; keep only the heading and do not invent figure explanations.
 
 ### Step 3 — Include figures
 
@@ -113,7 +166,7 @@ Explain the core innovations that distinguish this paper from related work.
 #### For Zotero notes (`edit_current_note`)
 
 - Use `![Caption](file:///{mineruCacheDir}/images/filename.png)`. The `edit_current_note` tool auto-imports `file://` images as Zotero embedded attachments.
-- Place figure embeds and their explanations under the `## 图解` section.
+- Place figure embeds and their explanations under the `## 9. 重要图表` section.
 
 #### For file-based notes (`file_io`)
 
@@ -209,7 +262,7 @@ Three components, joined by single hyphens:
 ### Key rules
 
 - **Never** output the full note text in chat. Always use `edit_current_note` or `file_io`.
-- Use the note template above — frontmatter is locked to the 7 fields shown; do not add or remove fields.
+- Use the note template above. For file-based notes, frontmatter is locked to the 7 fields shown; do not add or remove fields. For Zotero notes, omit frontmatter entirely.
 - Use `[@citekey]` Pandoc syntax inline **only when `citekey` is non-empty**. When `citekey` is missing or empty, reference the paper in prose instead (`First-Author et al. (Year)`). **Never emit `[@]`.**
 - Use the native path separator provided in the runtime platform section. Never mix separators.
 
